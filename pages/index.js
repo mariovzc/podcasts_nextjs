@@ -43,6 +43,12 @@ const Index = ({ channels }) => {
                     border-style: solid;
                     text-decoration: none;
                 }
+                a.channel {
+                    display: block;
+                    margin-bottom: 0.5em;
+                    color: #333;
+                    text-decoration: none;
+                }
                 .channel img{
                     width: 100%;
                 }
