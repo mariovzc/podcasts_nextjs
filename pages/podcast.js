@@ -1,9 +1,8 @@
 import fetch from 'isomorphic-fetch';
 import Link from 'next/link';
-
+import Layout from '../components/Layout';
 const Podcast = ({ clip }) => (
-    <div>
-        <header>Podcasts</header>
+    <Layout title={clip.title}>
         <div className='modal'>
             <div className='clip'>
                 <nav>
@@ -17,7 +16,7 @@ const Podcast = ({ clip }) => (
                 <div className='player'>
                 <h3>{ clip.title }</h3>
                 <h6>{ clip.channel.title }</h6>
-                <audio controls autoPlay={true}>
+                <audio controls autoPlay={false}>
                     <source src={clip.urls.high_mp3} type='audio/mpeg' />
                 </audio>
                 </div>
@@ -25,9 +24,6 @@ const Podcast = ({ clip }) => (
         </div>
 
         <style jsx>{`
-        nav {
-          background: none;
-        }
         nav a {
           display: inline-block;
           padding: 15px;
@@ -84,15 +80,7 @@ const Podcast = ({ clip }) => (
           z-index: 99999;
         }
       `}</style>
-
-      <style jsx global>{`
-        body {
-          margin: 0;
-          font-family: system-ui;
-          background: white;
-        }
-      `}</style>
-    </div>
+    </Layout>
 );
 
 Podcast.getInitialProps = async ({ query }) => {
