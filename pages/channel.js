@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import fetch from 'isomorphic-fetch';
 import Error from './_error';
 import Layout from '../components/Layout';
@@ -5,39 +6,51 @@ import ChannelGrid from '../components/ChannelGrid';
 import Podcasts from '../components/Podcasts';
 
 const Channel = ({ channel, audioClips, series, statusCode }) => {
-    if (statusCode != 200) {
-      return <Error statusCode={statusCode} />
-    }
-    return(
-      <Layout title={channel.title}>
-        <div 
-          className="banner"
-          style={{ backgroundImage: `url(${channel.urls.banner_image.original})` }}
+
+  const [openPodcast, setPodcasts] = useState(null);
+    
+  const setOpenPodcast = (event, podcast) => {
+    event.preventDefault();
+    setPodcasts(podcast)
+  };
+
+  if (statusCode != 200) {
+    return <Error statusCode={statusCode} />
+  }
+  return(
+    <Layout title={channel.title}>
+      <div 
+        className="banner"
+        style={{ backgroundImage: `url(${channel.urls.banner_image.original})` }}
+      />
+      { openPodcast && <div>TIENES UN PODCAST ABIERTO</div>}
+      {series.length > 0 &&
+        <div>
+          <h1>Series</h1>
+          <ChannelGrid channels={series} />
+        </div>
+      }
+      {audioClips.length > 0 &&
+        <Podcasts 
+          audioClips={audioClips} 
+          setOpenPodcast={setOpenPodcast}
         />
-        {series.length > 0 &&
-          <div>
-            <h1>Series</h1>
-            <ChannelGrid channels={series} />
-          </div>
+      }
+      <style jsx>{`
+        .banner {
+          width: 100%;
+          padding-bottom: 25%;
+          background-position: 50% 50%;
+          background-size: cover;
+          background-color: #aaa;
         }
-        {audioClips.length > 0 &&
-          <Podcasts audioClips={audioClips} />
+        h1 {
+          font-weight: 600;
+          padding: 15px;
         }
-        <style jsx>{`
-          .banner {
-            width: 100%;
-            padding-bottom: 25%;
-            background-position: 50% 50%;
-            background-size: cover;
-            background-color: #aaa;
-          }
-          h1 {
-            font-weight: 600;
-            padding: 15px;
-          }
-        `}</style>
-      </Layout>
-    )
+      `}</style>
+    </Layout>
+  )
 };
 
 Channel.getInitialProps = async ({ query, res }) => {
