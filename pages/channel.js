@@ -4,6 +4,8 @@ import Error from './_error';
 import Layout from '../components/Layout';
 import ChannelGrid from '../components/ChannelGrid';
 import Podcasts from '../components/Podcasts';
+import PodcastPlayer from '../components/PodcastPlayer';
+
 
 const Channel = ({ channel, audioClips, series, statusCode }) => {
 
@@ -14,6 +16,11 @@ const Channel = ({ channel, audioClips, series, statusCode }) => {
     setPodcasts(podcast)
   };
 
+  const closePodcast = (event) => {
+    event.preventDefault();
+    setPodcasts(null);
+  }
+
   if (statusCode != 200) {
     return <Error statusCode={statusCode} />
   }
@@ -23,7 +30,14 @@ const Channel = ({ channel, audioClips, series, statusCode }) => {
         className="banner"
         style={{ backgroundImage: `url(${channel.urls.banner_image.original})` }}
       />
-      { openPodcast && <div>TIENES UN PODCAST ABIERTO</div>}
+      { openPodcast && 
+        <div className="modal">
+          <PodcastPlayer
+            clip={openPodcast}
+            onClose={closePodcast}
+          />
+        </div>
+      }
       {series.length > 0 &&
         <div>
           <h1>Series</h1>
@@ -47,6 +61,15 @@ const Channel = ({ channel, audioClips, series, statusCode }) => {
         h1 {
           font-weight: 600;
           padding: 15px;
+        }
+        .modal {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: black;
+          z-index: 99999;
         }
       `}</style>
     </Layout>
